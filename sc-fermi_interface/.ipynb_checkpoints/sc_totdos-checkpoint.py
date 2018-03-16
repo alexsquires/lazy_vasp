@@ -18,12 +18,19 @@ if __name__ == "__main__":
     args = parse_command_line_arguments()
     
     dosrun = Vasprun(args.file)
-    totdens = dosrun.tdos.densities[Spin.up], dosrun.tdos.densities[Spin.up]
+    totdens = dosrun.tdos.densities[Spin.up] + dosrun.tdos.densities[Spin.down]
     
     totdos = dosrun.tdos.energies -  dosrun.eigenvalue_band_properties[2]    #Set VBM to 0 eV
-    sc_input = np.column_stack((totdos, totdens ))              #Create Array of Energy against density
+    
+    
+    if args.spin is not None:                                                                                   # Use this if dos is spin polarised
+    sc_input = np.column_stack((totdos, dosrun.tdos.densities[Spin.up], dosrun.tdos.densities[Spin.down]))  # Create array of energy against spin polarised density
+    np.savetxt("totdos.dat", sc_input)                                                                      # Save as totdos.dat
+    
+    
+    else:
+    sc_input = np.column_stack((totdos, totdens))                            #Create Array of Energy against density
     np.savetxt("totdos.dat", sc_input)                                       #Save as totdos.dat file
 
-    if args.spin is not None:                                                                                 # Use this if dos is spin polarised
-        sc_input = np.column_stack((totdos, dosrun.tdos.densities[Spin.up], dosrun.tdos.densities[Spin.up]))  # Create array of energy against spin polarised density
-        np.savetxt("totdos.dat", sc_input)                                                                    # Save as totdos.dat
+    
+

@@ -13,6 +13,7 @@ def parse_command_line_arguments():
     args = parser.parse_args()
     return args
 
+
 if __name__ == "__main__":
     
     args = parse_command_line_arguments()
@@ -22,17 +23,20 @@ if __name__ == "__main__":
 
     if args.spin is not None:            
         line1 = '2'
-	line2 = args.nelect
-	line3 = str(bandgap)
-	line4 = args.temperature
+        line2 = args.nelect
+        line3 = str(bandgap)
+        line4 = args.temperature
                 
     else:
-	line1 = '1'
-	line2 = args.nelect
-	line3 = str(bandgap)
-	line4 = args.temperature 
+        line1 = '1'
+        line2 = args.nelect
+        line3 = str(bandgap)
+        line4 = args.temperature 
         
 
     lines = [line1, line2, line3, line4]
-    with open('input-fermi.dat', 'w') as f:
+    with open('sc-fermi-params.dat', 'w') as f:
     	f.writelines("%s\n" % l for l in lines) 
+
+
+        

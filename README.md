@@ -3,9 +3,12 @@ Scripts for things people better at this than me haven't made/already have a bet
 
 ## Python
 
-- SC-Fermi interface, to generate input files for https://github.com/jbuckeridge/sc-fermi currently very, very hands on and hacky and needs serious generalisation
+### SC-Fermi interface
+To generate input files for https://github.com/jbuckeridge/sc-fermi currently very, very hands on and hacky and needs serious generalisation
 
-- CPLAPer! (or, Python CPLAP wrapper) automated generation of inputs for https://sourceforge.net/projects/cplap/files/. Should work for binary, ternary and quaternary materials systems.
+### CPLAPer! 
+
+(or, Python CPLAP wrapper) automated generation of inputs for https://sourceforge.net/projects/cplap/files/. Should work for binary, ternary and quaternary materials systems.
 
 Usage:
 

@@ -1,5 +1,5 @@
 # lazy_vasp (WIP)
-Scripts for things people better at this than me haven't made/already have a better way of doing that I didn't think of. 
+Ph.D. project related scripts. 
 
 ## Python
 

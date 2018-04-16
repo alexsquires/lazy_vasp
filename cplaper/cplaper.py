@@ -171,8 +171,7 @@ def cplaper_competing( competing_phases, elemental_references ):
             
     for compound,i in zip (competing_phase_fomula,k):
          
-        result = ( ( ref_phas['{}'.format(compound)].energy) - i ) / sum(ref_phas['{}'.format(compound)].stoichiometry.values())
-            
+        result = ( ( ref_phas['{}'.format(compound)].energy) - i ) d             
         competing_phase_energies.append(result)    
     
           

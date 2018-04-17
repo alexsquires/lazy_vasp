@@ -1,5 +1,3 @@
-import pandas as pd
-import numpy as np
 import vasppy
 from vasppy.calculation import *
 import fileinput
@@ -63,7 +61,7 @@ def to_cplap( compound_of_interest, competing_phases, elemental_references, depe
     f.write(remove_formatting)
     f.close()
     
-    cplap_writer('ref_phases.yaml', 'elemental_references.yaml')
+    cplap_writer(competing_phases, elemental_references)
     
     cplap_mkinput()
     
@@ -74,14 +72,13 @@ def to_cplap( compound_of_interest, competing_phases, elemental_references, depe
     
 def cplap_writer( competing_phases, elemental_references ):
     
-    elements = cplaper_elements( elemental_references)
-    energies = cplaper_competing( competing_phases, elemental_references )
+    elements = cplaper_elements( elemental_references )
+    #energies = cplaper_competing( competing_phases, elemental_references )
     
     competing_phase_energies = []  # define empty list
     interim_list = []              # define empty list  
     competing_phase_fomula = []    # define empty list 
-    
-    ref_phas = import_calculations_from_file(competing_phases) # read in .yaml competing phases as calculations
+    ref_phas = import_calculations_from_file( competing_phases )
     
     for compound in ref_phas:                                 # iterate over the different compounds in the reference phase calculations
         competing_phase_key = str(compound)                   # convert the name of the compound to a string
@@ -91,29 +88,21 @@ def cplap_writer( competing_phases, elemental_references ):
     rad = []
     competing = []
     final = []
-    res =[]
-
+    res = []
     
     for i in competing_phase_fomula:
         j = (len (ref_phas['{}'.format(i)].stoichiometry))
-        final.append(j)
-                                                # final is the list of number of elements in competeing phase
-        
-
-    for i in competing_phase_fomula:
         x = ref_phas['{}'.format(i)].stoichiometry
-        j = {v:k for k,v in x.items()}
-        res.append(j)
-                                                  # swap key and value in stoichiometry
+        q = [(v,k) for k,v in x.items()]
+                                                                                                # while iterating over the competing phases, 
+        for element in elements:                                                                                                   # also iterate within the elements in that competing phase
+            single_energy =  ref_phas['{}'.format(i)].stoichiometry['{}'.format(element)] * elements['{}'.format(element)]  # calculate energy per element 
+            result = ( ( ref_phas['{}'.format(i)].energy) - single_energy )
         
-    for i in competing_phase_fomula:
-        x = Calculation.scale_stoichiometry(ref_phas['{}'.format(i)], 1)
-        cplap.append(x)
-    
+        rad.append(j)
+        rad.append([q, result])
+                                            
 
-    for i, j, k in zip( final, res , energies):
-        rad.append(i)
-        rad.append([j,k])
 
     with open('interim.dat', 'w') as file:
         for item in rad:
@@ -124,13 +113,14 @@ def cplap_writer( competing_phases, elemental_references ):
     filedata = f.read()
     f.close()
 
-    newdata = filedata.replace("'","").replace("[","").replace("[","").replace("]","").replace(",","").replace("{","").replace("}","").replace(":","")
+    newdata = filedata.replace("'","").replace("[","").replace("[","").replace("]","").replace(",","").replace("(","").replace(")","").replace(":","")
 
 
     f = open('cplap_input.dat','w')
     f.write(newdata)
     f.close()
-    
+
+
 def cplaper_elements( elemental_references ):
     
     ele_ref  = import_calculations_from_file(elemental_references)     # given .yaml file, elements will read it in as vasppy calculations
@@ -171,7 +161,8 @@ def cplaper_competing( competing_phases, elemental_references ):
             
     for compound,i in zip (competing_phase_fomula,k):
          
-        result = ( ( ref_phas['{}'.format(compound)].energy) - i ) d             
+        result = ( ( ref_phas['{}'.format(compound)].energy) - i )
+            
         competing_phase_energies.append(result)    
     
           

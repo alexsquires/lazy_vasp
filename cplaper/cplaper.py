@@ -80,7 +80,7 @@ def to_cplap( compound_of_interest, competing_phases, elemental_references, depe
 def cplap_writer( competing_phases, elemental_references ):
     
     elements = cplaper_elements( elemental_references )
-    print(elements)
+    
     
     
     competing_phase_energies = []  # define empty list
@@ -158,4 +158,4 @@ def cplaper_energy(compound, elemental_references):
             blank.append(single_energy)
             sums = sum(blank)
             energy =( ( compound.energy) - sums )
-            return energy
+    return energy

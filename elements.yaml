@@ -76,7 +76,7 @@ vbm: -6.8443
 cbm: -4.5816
 potcar:
     - O: PAW_RPBE O 08Apr2002
-energy: -9.0849624 eV
+energy: -10.3649624 eV
 lreal: True
 k-points:
     scheme: Monkhorst

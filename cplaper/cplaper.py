@@ -14,6 +14,20 @@ def to_cplap( compound_of_interest, competing_phases, elemental_references, depe
     
 def cplap_interest( interest, elements, competing_phases, dependant_variable):  
 
+    """
+    Compiles interest phase information in a CPLAP-friendly format
+    
+    Args:
+        
+        interest (dict(vasppy.Calculation)): material to be considered
+        competing_phases (dict(vasppy.Calculation)): competing phases to be considered
+        elements (dict{Str:Float}): dictionary of {elemental symbol : energy per atom}
+        dependant_variable (str): element CPLAP should consider as the dependant variable 
+        
+    Returns:
+        Stoichiometry and energy formatted suitable for CPLAP
+    
+    """
     interest_phase_fomula = []
     interest_info = []
 
@@ -41,7 +55,14 @@ def cplap_competing( competing_phases, elements ):
      
     
     """
+    Compiles competing phase information in a CPLAP-friendly format
     
+    Args:
+        competing_phases (dict(vasppy.Calculation)): competing phases to be considered
+        elements (dict{Str:Float}): dictionary of {elemental symbol : energy per atom}
+        
+    Returns:
+        Stoichiometry and energy formatted suitable for CPLAP
     
     """
     
@@ -66,6 +87,11 @@ def cplap_competing( competing_phases, elements ):
 def cplap_mkinput( interest_info, competing_info ):
     
     """
+    Compiles interest_info and competing_info into the input file
+    
+    Args:
+        interest_info (str): CPLAP-formatted information about material of interest
+        competing_info (str): CPLAP-formatted information about competing phases
     
     """
     

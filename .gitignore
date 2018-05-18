@@ -1,5 +1,7 @@
 #testing files
+.yaml
 vasprun.xml
 POSCAR
 totdos.dat
 .ipynb_checkpoints
+.dat

@@ -8,9 +8,7 @@ To generate input files for https://github.com/jbuckeridge/sc-fermi currently ve
 
 ### CPLAPer! 
 
-#### ~~Currently some issues in how the input file is complied.~~ (Strikethrough as not 100% sure this is fixed)
-
-(or, Python CPLAP wrapper) automated generation of inputs for https://sourceforge.net/projects/cplap/files/. Should work for binary, ternary and quaternary materials systems. 
+(or, a Python CPLAP wrapper) automated generation of inputs for https://sourceforge.net/projects/cplap/files/. Should work for binary, ternary and quaternary materials systems. 
 
 Usage:
 

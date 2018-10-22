@@ -3,9 +3,6 @@ Ph.D. project related scripts.
 
 ## Python
 
-### SC-Fermi interface
-To generate input files for https://github.com/jbuckeridge/sc-fermi currently very, very hands on and hacky and needs serious generalisation
-
 ### CPLAPer! 
 
 (or, a Python CPLAP wrapper) automated generation of inputs for https://sourceforge.net/projects/cplap/files/. Should work for binary, ternary and quaternary materials systems. 
@@ -20,6 +17,14 @@ TODO:
  - tests
  - document
  - option to automatically reduce stoichiometry to 1 formula unit
+
+### Para
+
+Testing a script to apply standard vasp band and kpoint parallelism based off number of bands, kpoints and system archetecture. 
+
+### Neb script
+
+Basic NEB post processing
 
 ## Shell Scripts
 

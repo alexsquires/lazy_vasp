@@ -17,6 +17,13 @@ TODO:
  - tests
  - document
  - option to automatically reduce stoichiometry to 1 formula unit
+ 
+### structure_makers.py
+
+Takes input crystal structure and can give:
+
+ - all symetrically distinct vacancies
+ - all symetrically distinct anti-sites
 
 ### Para
 

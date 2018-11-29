@@ -35,8 +35,11 @@ Basic NEB post processing
 
 ## Shell Scripts
 
-cpcalc.sh
-when.sh  
+cpcalc.sh: copy a calculation to a new folder, copying CONTCAR to POSCAR
+
+when.sh: grep for calculation timestamp
+
+clean_calc: delete all output files for a 'clean' re-run.
 
 
 ### DEPRECATED

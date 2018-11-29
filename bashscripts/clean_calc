@@ -1,0 +1,5 @@
+#! /bin/bash
+
+mkdir tmp && mv {INCAR,POSCAR,POTCAR,KPOINTS,job.sh}  tmp  # create tmp dir and move files there
+rm *                                                       # delete all other files
+mv tmp/* . && rm -rf tmp                                   # move all files back and delete tmp dir

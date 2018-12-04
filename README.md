@@ -17,6 +17,13 @@ TODO:
  - tests
  - document
  - option to automatically reduce stoichiometry to 1 formula unit
+ 
+### structure_makers.py
+
+Takes input crystal structure and can give:
+
+ - all symetrically distinct vacancies
+ - all symetrically distinct anti-sites
 
 ### Para
 
@@ -28,8 +35,11 @@ Basic NEB post processing
 
 ## Shell Scripts
 
-cpcalc.sh
-when.sh  
+cpcalc.sh: copy a calculation to a new folder, copying CONTCAR to POSCAR
+
+when.sh: grep for calculation timestamp
+
+clean_calc: delete all output files for a 'clean' re-run.
 
 
 ### DEPRECATED

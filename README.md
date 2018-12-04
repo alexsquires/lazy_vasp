@@ -18,6 +18,10 @@ TODO:
  - document
  - option to automatically reduce stoichiometry to 1 formula unit
  
+ ### SC-Pyper
+ 
+Python wrapper for the Fortran code https://github.com/jbuckeridge/sc-fermi
+ 
 ### structure_makers.py
 
 Takes input crystal structure and can give:

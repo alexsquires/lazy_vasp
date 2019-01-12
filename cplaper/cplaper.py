@@ -1,171 +1,78 @@
-import vasppy
-from vasppy.calculation import *
-import os
+from vasppy.calculation import import_calculations_from_file
 
-def to_cplap( compound_of_interest, competing_phases, elemental_references, dependant_variable ):
+class Phase:
 
-    interest = import_calculations_from_file( compound_of_interest )
-    ele_ref  = import_calculations_from_file( elemental_references )
-    comps    = import_calculations_from_file( competing_phases )
-    
-    elements = cplap_elements(ele_ref) 
-    
-    cplap_mkinput ( cplap_interest( interest, elements, comps, dependant_variable), cplap_competing(comps, elements) )
-    
-def cplap_interest( interest, elements, competing_phases, dependant_variable):  
-
-    """
-    Compiles interest phase information in a CPLAP-friendly format
-    
-    Args:
+    def __init__( self, formula, energy):
+        self.formula = formula
+        self.energy = energy
         
-        interest (dict(vasppy.Calculation)): material to be considered
-        competing_phases (dict(vasppy.Calculation)): competing phases to be considered
-        elements (dict{Str:Float}): dictionary of {elemental symbol : energy per atom}
-        dependant_variable (str): element CPLAP should consider as the dependant variable 
-        
-    Returns:
-        Stoichiometry and energy formatted suitable for CPLAP
+    @property
+    def n_elements( self ):
+        return len( self.formula )
     
-    """
-    interest_phase_fomula = []
-    interest_info = []
+class Cplap_in:
 
-    for material in interest:                                
-        interest_phase_key = str(material)                    
-        interest_phase_fomula.append(interest_phase_key)      
-    
-    for i in interest_phase_fomula:
-        number_of_elements = (len (interest['{}'.format(i)].stoichiometry))
-        stoich = interest['{}'.format(i)].stoichiometry
-        formatted_stoich = [(v,k) for k,v in stoich.items()]
-        interest_info.append([formatted_stoich, cplap_energy(interest['{}'.format(i)], elements)])
-    
-    interest_parameters = []
-    
-    interest_parameters.append(len( elements ))
-    interest_parameters.append(interest_info)
-    interest_parameters.append(dependant_variable)
-    interest_parameters.append(len( competing_phases ))
-    
-    return interest_parameters
+    def __init__( self, competing, dependent, interest):
+        self.competing = competing
+        self.dependent = dependent
+        self.interest = interest
 
+    @property
+    def n_competing( self ):
+        return len( self.competing )
 
-def cplap_competing( competing_phases, elements ):
-     
-    
-    """
-    Compiles competing phase information in a CPLAP-friendly format
-    
-    Args:
-        competing_phases (dict(vasppy.Calculation)): competing phases to be considered
-        elements (dict{Str:Float}): dictionary of {elemental symbol : energy per atom}
-        
-    Returns:
-        Stoichiometry and energy formatted suitable for CPLAP
-    
-    """
-    
-    competing_phase_fomula = []    
-    
-    for compound in competing_phases:                                 
-        competing_phase_key = str(compound)                 
-        competing_phase_fomula.append(competing_phase_key) 
-    
-    competing_phase_info = []
+    def output( self ):
+            print(self.interest)
 
-    for i in competing_phase_fomula:
-        number_of_elements = (len (competing_phases['{}'.format(i)].stoichiometry))
-        stoich = competing_phases['{}'.format(i)].stoichiometry
-        formatted_stoich = [(v,k) for k,v in stoich.items()]
-                                                                                                
-        competing_phase_info.append(number_of_elements)
-        competing_phase_info.append([formatted_stoich, cplap_energy(competing_phases['{}'.format(i)], elements)])
-        
-    return competing_phase_info
- 
-def cplap_mkinput( interest_info, competing_info ):
-    
-    """
-    Compiles interest_info and competing_info into the input file
-    
-    Args:
-        interest_info (str): CPLAP-formatted information about material of interest
-        competing_info (str): CPLAP-formatted information about competing phases
-    
-    """
-    
-    with open('interim.dat', 'w') as file:
-        for item in interest_info:
-            file.write("%s\n" % item)
-        for item in competing_info:
-            file.write("%s\n" % item)
-        
+            with open('input.dat', 'w') as f:
+                for i in self.interest:
+                    f.write( str(int(i.n_elements/2)) + '\n' )
+                    f.write( str(i.formula) + ' ' + str(i.energy) + '\n')
+                f.write( str(self.dependent) + '\n')
+                f.write( str(self.n_competing) + '\n' )
+                for p in self.competing:
+                    f.write( str(int(p.n_elements/2)) + '\n')
+                    f.write( str(p.formula) + ' ' + str(p.energy) + '\n')
+                
+            f.close()
 
-    f = open('interim.dat','r')
-    filedata = f.read()
-    f.close()
+def formation_energy(phase,elements,calc_type):
+        single_el_energies = {i : elements[i].energy/elements[i].stoichiometry[i] for i in elements}
+        competing_and_reference = [single_el_energies,dict(calc_type[phase].stoichiometry)]
+        collected_info = {
+            k: [d.get(k) for d in competing_and_reference]
+            for k in set().union(*competing_and_reference)
+        }
+        formation_energy = (calc_type[phase].energy - sum([i*j for i,j in collected_info.values() if j is not None]))
+        return formation_energy
+            
+            
+def mk_entry(phase,calc_type,elements):
+    format_formula = [(v,k) for k,v in phase.stoichiometry.items()]
+    flat_formula = [g for j in format_formula for g in j ]
+    energy = formation_energy(phase.title,elements,calc_type)
+    n_els = len(phase.stoichiometry.items())
+    return Phase(flat_formula,energy)
+            
+def mk_input(phase_of_interest,competing_phases,elemental_references,dependent):
+    inter = import_calculations_from_file(phase_of_interest)
+    comp = import_calculations_from_file(competing_phases)
+    els = import_calculations_from_file(elemental_references)
+    interest = [mk_entry(inter[i],inter,els) for i in inter]
+    competing = [mk_entry(comp[i],comp,els) for i in comp]
+    Cplap_in(competing,dependent,interest).output()
+    tidy()
+           
 
-    newdata = filedata.replace("'","").replace("[","").replace("[","").replace("]","").replace(",","").replace("(","").replace(")","").replace(":","")
+def tidy():
+    # Read in the file
+    with open('input.dat', 'r') as file :
+        filedata = file.read()
 
+    # Replace the target string
+    filedata = filedata.replace("'","").replace("[","").replace("[","").replace("]","").replace(",","").replace("(","").replace(")","").replace(":","")
 
-    f = open('input.dat','w')
-    f.write(newdata)
-    f.close()
-    
-    os.remove('interim.dat')
+    # Write the file out again
+    with open('input.dat', 'w') as file:
+        file.write(filedata)       
 
-
-
-def cplap_elements( elemental_references ):
-    
-    """
-    Takes a set of element vasppy.Calculation objects and returns a dictionary of scaled energies (per atom)
-    
-    Args:
-        elemental_references (dict(vasppy.Calculations)): vasppy calculations for elements to be considered
-        
-    Returns:
-        normalised_elemental_references (dict{Str:Float}): dictionary of {elemental symbol : energy per atom}
-    
-    """
-    
-    elements = []     
-    elemental_reference_energies = []
-    
-    for key in elemental_references:                                   
-        ion = str(key)                                                  
-        elements.append(ion)                                              
-                                                                    
-    for ion in elements:                                                                                                  
-        single_element_energy = float (elemental_references['{}'.format(ion)].energy 
-                                       / elemental_references['{}'.format(ion)].stoichiometry[ion] )                        
-        individual_ion_dict = { ion : single_element_energy }                                                                              
-        elemental_reference_energies.append(individual_ion_dict)               
-    
-    normalised_elemental_references = { k: v for d in elemental_reference_energies for k, v in d.items() }                             
-    return normalised_elemental_references    
-
-
-def cplap_energy(compound, elemental_references):
-    
-    """
-    Calulates the formation energy of a compound
-    
-    Args: 
-        compound (vasppy.Calculation): compound for which formation energy should be calculated
-        elemental_references (dict{str:float}): dictionary of elemental symbol:energy
-    
-    Returns:
-        (float) formation energy: formation energy
-    
-    """
-    individual_energies = []
-    
-    for element in elemental_references:
-            energy_per_element = compound.stoichiometry['{}'.format(element)] * elemental_references['{}'.format(element)] 
-            individual_energies.append(energy_per_element)
-            sum_of_elemental_energies = sum(individual_energies)
-            formation_energy =( ( compound.energy) - sum_of_elemental_energies )
-   
-    return formation_energy

@@ -18,6 +18,10 @@ TODO:
  - document
  - option to automatically reduce stoichiometry to 1 formula unit
  
+ ### SC-Pyper
+ 
+Python wrapper for the Fortran code https://github.com/jbuckeridge/sc-fermi
+ 
 ### structure_makers.py
 
 Takes input crystal structure and can give:
@@ -39,7 +43,7 @@ cpcalc.sh: copy a calculation to a new folder, copying CONTCAR to POSCAR
 
 when.sh: grep for calculation timestamp
 
-clean_calc: delete all output files for a 'clean' re-run.
+clean_calc: delete all VASP output files for a 'clean' re-run.
 
 
 ### DEPRECATED

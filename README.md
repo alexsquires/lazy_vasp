@@ -9,7 +9,7 @@ Ph.D. project related scripts.
 
 Usage:
 
-``` to_cplap( composition_of_interest, competing_phases, elemental_references, dependant_variable ) ```
+``` mk_input( composition_of_interest, competing_phases, elemental_references, dependant_variable ) ```
 
 Will give an `input.dat` file, that should be ready to be fed into CPLAP. Composition of interest, competing phases, and elemental references should be fed in as .yaml files containing stoichiometry and energy information. To do this, use https://github.com/bjmorgan/vasppy/blob/master/scripts/vasp_summary.py. Dependant variable should be fed in as a string of chemical symbol, or 'none'. 
 

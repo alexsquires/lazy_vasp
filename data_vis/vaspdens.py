@@ -1,8 +1,5 @@
 from ase.calculators.vasp import VaspChargeDensity
 import numpy as np
-import matplotlib.pyplot as plt
-
-#chg=VaspChargeDensity('lgps_ELFCAR.vasp')
 
 def read_vasp_density(density_file):
     data = VaspChargeDensity(density_file)
